@@ -14,8 +14,8 @@ PFont zerovelo;
 
 void settings()
 {
-  size(displayWidth,displayWidth,P2D);  
-  w = h = displayWidth;
+  size(640,640,P2D);  
+  w = h = 640;
   ow = oh = 480;
   rw = w/480;
   rh = h/480;
