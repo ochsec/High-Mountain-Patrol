@@ -2,8 +2,8 @@ var collisionCounterOn;   // boolean
 var state, score, interval, intervalCounter;  // int
 var w, h, ow, oh, rw, rh; // float
 var barWidth, barHeight, speedX, speedXDelta, speedY, gravity, ascentSpeed; // float
-var Bar = [];
-var BkObj = [];
+var Bars = [];
+var BkObjs = [];
 var Coins = [];
 var Gems = [];
 var Boulders = [];
@@ -11,15 +11,19 @@ var Boulders = [];
 function setup() {
   createCanvas(480, 480);
   frameRate(30);
-  w, h = width;
-  ow, oh = 480;
+  w = width;
+  h = width;
+  ow = 480;
+  oh = 480;
   rw = w/480;
   rh = h/480;
-  
+  Manager.setupEnvironment();
+  Manager.setupBars();
 }
 
 function draw() {
-  
+  background('#000028');
+  Manager.manageBars();
 }
 
 var Manager = {
@@ -31,7 +35,7 @@ var Manager = {
     speedY = 1*rh;
     gravity = 0.4*rh;
     ascentSpeed = 0;
-    interval = Math.round((Math.random() * (4-1) + 1) * w/speedX);
+    interval = round(random(1, 4) * w/speedX);
     intervalCounter = 0;
     collisionCounter = false;
     state = 0;
@@ -43,7 +47,24 @@ var Manager = {
   setupBars: function () {
     barWidth = w/20;
     barHeight = h - h/6;
-    
+    for (var i=0; i<22; i++) {
+      Bars[i] = new Bar(i*barWidth, barHeight, speedX);
+    }
+    console.log("Bars setup.");
+    for (var i=0; i<Bars.length; i++) {
+      console.log(Bars[i]);
+    }
+  },
+  
+  manageBars: function () {
+    for (var i=0; i<Bars.length; i++) {
+      if (Bars[i].xpos < -2 * barWidth) {
+        barHeight = random(mouseY, h);
+        Bars[i].xpos = w;
+      }
+      Bars[i].update(mouseX, mouseY, speedX, ascentSpeed);
+      Bars[i].display();
+    }
   }
 }
 
@@ -61,16 +82,16 @@ function Bar (x, y, s) {
   this.update = function (x, y, s, asc) {
     this.speed = s;
     this.ascent = asc;
-    this.xpos = xpos - speed;
-    this.ypos = ypos + ascent;
+    this.xpos -= this.speed;
+    this.ypos += this.ascent;
     this.mousePosX = x;
-    if ((xpos > mousePosX - barHalfWidth) && (xpos < mousePosX + barHalfWidth)) {
+    if ((this.xpos > this.mousePosX - this.barHalfWidth) && (this.xpos < this.mousePosX + this.barHalfWidth)) {
       this.ypos = y;
     }
-    if ((xpos < w/6) && (xpos > w/6 - w/20)) {
+    if ((this.xpos < w/6) && (this.xpos > w/6 - w/20)) {
       // player.setPrevBarHeight(ypos);
     }
-    if ((xpos > w/6) && (xpos < w/6 + w/20)) {
+    if ((this.xpos > w/6) && (this.xpos < w/6 + w/20)) {
       /*
       player.setBarhHeight(ypos);
       player.lastpos = player.ypos;
@@ -91,6 +112,7 @@ function Bar (x, y, s) {
     stroke(0);
     strokeWeight(1);
     fill('#5CE200');
-    rect(xpos - barHalfWidth, ypos, barWidth, h - ypos);
+    rect(this.xpos - this.barHalfWidth, this.ypos, this.barWidth, h - this.ypos);
+    console.log("xpos: " + this.xpos);
   }
 }
