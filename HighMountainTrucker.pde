@@ -452,7 +452,7 @@ class Coin extends Pickup
     rectMode(CORNER);
     imageMode(CENTER);   
     image(img, xpos+pickupw/2, ypos+pickuph/2, pickupw, pickuph);
-    rect(xpos, ypos, pickupw, pickuph);
+    // rect(xpos, ypos, pickupw, pickuph);
   }
 }
 class Gem extends Pickup
@@ -866,7 +866,7 @@ class Player
     rectMode(CORNER);
     stroke(200);
     noFill();
-    rect(xpos, ypos-yoffset, xoffset, yoffset);
+    // rect(xpos, ypos-yoffset, xoffset, yoffset);
   }
   
   void display()
