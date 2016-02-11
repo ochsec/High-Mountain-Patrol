@@ -5,6 +5,10 @@ class Manager
   
   void setupEnvironment()
   {
+    w = h = 640;
+    ow = oh = 480;
+    rw = w/480;
+    rh = h/480;    
     background(#000028);
     speedX = speedXdelta = 4*rw;
     speedY = 1*rh;

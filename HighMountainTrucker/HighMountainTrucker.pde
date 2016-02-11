@@ -23,6 +23,7 @@ void settings()
 
 void setup()
 {
+  size(640,640,P2D);  // for Processing v. 2  
   frameRate(30);
   manager = new Manager();  
   manager.setupEnvironment();
