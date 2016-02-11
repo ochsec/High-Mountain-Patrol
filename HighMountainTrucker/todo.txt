@@ -1,7 +1,0 @@
-To Do
-
-1. Adjust momentum and gravity
-2. Create player sprite, colors textures
-3. Add scrolling backgrounds
-4. Add explosion effect
-5. Add point system
