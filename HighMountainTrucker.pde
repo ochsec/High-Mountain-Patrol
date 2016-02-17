@@ -57,7 +57,7 @@ void draw()
       manager.detectPickups();
     }
     player.explode();
-    println("player.ypos: " + player.ypos + " , h: " + h);
+    // println("player.ypos: " + player.ypos + " , h: " + h);
   }
   manager.manageFonts();
 }
@@ -99,12 +99,12 @@ void keyPressed()
   if(key == 'a')
   {
     speedX += 0.2;  
-    println("Speed x: " + speedX);
+    // println("Speed x: " + speedX);
   }
   if(key == 's')
   {
     speedX -= 0.2;
-    println("Speed x: " + speedX);
+    // println("Speed x: " + speedX);
   }
   if(key == 'r')
     realign();
@@ -574,7 +574,7 @@ class Manager
         Coins[i].xpos = w + random(200);   
         Coins[i].ypos = random(h);
         Coins[i].counterOn = true;
-        println("Overlapped: " + pickupcounter);
+        // println("Overlapped: " + pickupcounter);
       }
       if(player.xpos>Gems[i].xpos && player.xpos<Gems[i].xend && 
         ((player.ypos-player.yoffset>Gems[i].ypos && player.ypos-player.yoffset<Gems[i].yend) || (player.ypos>Gems[i].ypos && player.ypos<Gems[i].yend)))
@@ -585,7 +585,7 @@ class Manager
         Gems[i].xpos = w + random(200);   
         Gems[i].ypos = random(h);
         Gems[i].counterOn = true;
-        println("Overlapped: " + pickupcounter);
+        // println("Overlapped: " + pickupcounter);
       }      
     }       
   }    
