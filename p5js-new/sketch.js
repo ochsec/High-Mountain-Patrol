@@ -9,7 +9,7 @@ var Coins = [];
 var Gems = [];
 var Boulders = [];
 
-function setup() {
+function setup () {
   createCanvas(480, 480);
   frameRate(30);
   w = width;
@@ -23,12 +23,16 @@ function setup() {
   Manager.setupPlayer();
 }
 
-function draw() {
+function draw () {
   background('#000028');
+  if (frameCount % 30 === 0) {
+    if (abs(speedX - speedXDelta) > 1) {
+      speedXDelta = speedX;
+      Manager.realign();
+    }
+  }
   Manager.manageBars();
-  player.update();
-  player.display();
-  // Manager.managePlayer();
+  Manager.managePlayer();
 }
 
 var Manager = {
@@ -79,6 +83,16 @@ var Manager = {
   managePlayer: function () {
     player.update();
     player.display();
+  },
+
+  realign: function () {
+    Bars[0].xpos = round(Bars[0].xpos);
+    for (var i=1; i<22; i++) {
+      if (Bars[i].xpos > Bars[0].xpos)
+        Bars[i].xpos = Bars[0].xpos + i*barWidth;
+      else
+        Bars[i].xpos = Bars[0].xpos - (22-i)*barWidth;
+    }
   }
 };
 
@@ -131,7 +145,6 @@ function Bar (x, y, s) {
     strokeWeight(1);
     fill('#5CE200');
     rect(this.xpos - this.barHalfWidth, this.ypos, this.barWidth, h - this.ypos);
-    //console.log("xpos: " + this.xpos);
   }
 }
 
@@ -192,7 +205,6 @@ function Player (x, y) {
   this.display = function () {
     push();
     translate(this.xpos, this.ypos);
-    console.log(this.xpos);
     if (this.ypos > this.lastypos)
       rotate(-2*PI/(this.ypos/this.lastypos));
     else
