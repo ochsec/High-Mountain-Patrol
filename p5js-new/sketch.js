@@ -211,8 +211,8 @@ function Player (x, y) {
       rotate(-2*PI/(this.avg0/this.avg1));
     this.drawRover();
     pop();
-    //if (this.snapshot === false)
-      //this.getImage();
+    if (this.snapshot === false)
+      this.getImage();
   };
 
   this.drawRover = function () {
@@ -245,4 +245,155 @@ function Player (x, y) {
   this.setPrevBarHeight = function (y) {
     this.prevBarHeight = y;
   };
+}
+
+function BkObj (t, x, y) {
+  this.type = t;
+  this.xpos = x;
+  this.ypos = y;
+  if (this.type === 3) {
+    this.increment = 3*h/58;
+    this.segmentWidth = w/58;
+    this.c1 = color('#001400');
+    this.c1 = color('#3f1900');
+  }
+  switch (this.type) {
+    case 0:
+      this.xend = 28*this.segmentWidth;
+      break;
+    case 1:
+      this.xend = 40*this.segmentWidth;
+      break;
+    case 2:
+      this.xend = 42*this.segmentWidth;
+      break;
+    case 3:
+      this.xend = 28*this.segmentWidth;
+      break;
+    case 4:
+      this.xend = 40*this.segmentWidth;
+      break;
+    case 5:
+      this.xend = 42*this.segmentWidth;
+      break;
+  }
+  this.maxObjWidth = 42*this.segmentWidth;
+
+  this.update = function (speed, ascent) {
+    if (this.type < 3) {
+      this.xpos -= 0.05*speed;
+      this.ypos += 0.01*speed;
+    }
+    else {
+      this.xpos -= 0.25*speed;
+      this.ypos += 0.05*ascent;
+    }
+  };
+
+  this.display = function () {
+    switch (this.type) {
+      case 0:
+        drawMountainA(this.xpos, this.ypos);
+        break;
+      case 1:
+        drawMountainB(this.xpos, this.ypos);
+        break;
+      case 2:
+        drawMountainC(this.xpos, this.ypos);
+        break;
+      case 3:
+        drawMountainA(this.xpos, this.ypos);
+        break;
+      case 4:
+        drawMountainB(this.xpos, this.ypos);
+        break;
+      case 5:
+        drawMountainC(this.xpos, this.ypos);
+        break;
+    }
+  };
+
+  this.drawMountainA = function (x, y) {
+    stroke(c1);
+    fill(c1);
+    for (var i=0; i<29; i++) {
+      if (i <= 14)
+        rect(x + i*this.segmentWidth, y, this.segmentWidth, -i*this.increment);
+      else
+        rect(x + i*this.segmentWidth, y, this.segmentWidth, -(14*this.increment - (i - 14)*this.increment));
+    }
+    stroke(c2);
+    fill(c2);
+    for (var i=1; i<27; i++) {
+      if (i<=13)
+        rect(x + this.segmentWidth + i*this.segmentWidth, y, this.segmentWidth, -i*this.increment);
+      else {
+        rect(x + this.segmentWidth + i*this.segmentWidth, y, this.segmentWidth, -(13*this.increment - (i - 13)*this.increment));
+      }
+    }
+  }
+
+  this.drawMountainB = function (x, y) {
+    stroke(c1);
+    fill(c1);
+    for (var i=0; i<41; i++) {
+      if (i<=14)
+        rect(x + i*this.segmentWidth; y, this.segmentWidth; -i*this.increment);
+      else if (14<i && i<=24)
+        rect(x + i*this.segmentWidth, y, this.segmentWidth, -14*this.increment);
+      else
+        rect(x + i*this.segmentWidth, y, this.segmentWidth, -(14*this.increment - (i - 24)*this.increment));
+    }
+    stroke(c2);
+    fill(c2);
+    for (var i=1; i<39; i++) {
+      if (i<=13)
+        rect(x + this.segmentWidth + i*this.segmentWidth, y, this.segmentWidth, -i*this.increment);
+      else if (13<i && i<=23)
+        rect(x + this.segmentWidth + i*this.segmentWidth, y, this.segmentWidth, -13*this.increment);
+      else
+        rect(x + this.segmentWidth + i*this.segmentWidth, y, this.segmentWidth, -(13*this.increment - (i - 23)*this.increment);
+    }
+  };
+
+  this.drawMountainC = function (x, y) {
+    // peak 1
+    stroke(c1);
+    fill(c1);
+    for (var i=0; i<29; i++) {
+      if (i<=14)
+        rect(x + i*this.segmentWidth, y, this.segmentWidth, -i*this.increment);
+      else
+        rect(x + i*this.segmentWidth, y, this.segmentWidth, -(14*this.increment - (i - 14)*this.increment));
+    }
+    stroke(c2);
+    fill(c2);
+    for (var i=1; i<27; i++) {
+      if (i<=13)
+        rect(x + this.segmentWidth + i*this.segmentWidth, y, this.segmentWidth, -i*this.increment);
+      else
+        rect(x + this.segmentWidth + i*this.segmentWidth, y, this.segmentWidth, -(13*this.increment - (i - 13)*this.increment));
+    }
+
+    // peak 2
+    x = x + 14*this.segmentWidth;
+    y = y + 3*this.increment;
+    stroke(c1);
+    fill(c1);
+    for (var i=0; i<29; i++) {
+      if (i<=14)
+        rect(x + i*this.segmentWidth, y, this.segmentWidth, -i*this.increment);
+      else {
+        rect(x + i*this.segmentWidth, y, this.segmentWidth, -(14*this.increment - (i - 14)*this.increment));
+      }
+    }
+    stroke(c2);
+    fill(c2);
+    for (var i=1; i<27; i++) {
+      if (i<=13)
+        rect(x + this.segmentWidth + i*this.segmentWidth, y, this.segmentWidth, -i*this.increment);
+      else
+        rect(x + this.segmentWidth + i*this.segmentWidth, y, this.segmentWidth, -(13*this.increment - (i - 13)*this.increment));
+    }
+  }
 }
