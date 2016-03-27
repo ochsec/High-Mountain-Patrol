@@ -25,6 +25,8 @@ function setup() {
 }
 
 function draw() {
+    if (frameCount % 360 === 0)
+        Manager.changeAscent(floor(random(100) + 1));
     if (frameCount % 30 === 0) {
         if (abs(speedX - speedXDelta) > 1) {
             speedXDelta = speedX;
@@ -114,6 +116,13 @@ var Manager = {
             else
                 Bars[i].xpos = Bars[0].xpos - (22 - i) * barWidth;
         }
+    },
+
+    changeAscent: function (change) {
+        if (change < 76)
+            ascentSpeed = h / oh * random(0, 2.5);
+        else
+            ascentSpeed = -h / oh * random(0, 2.5);
     }
 };
 
