@@ -9,6 +9,14 @@ var Coins = [];
 var Gems = [];
 var Boulders = [];
 
+// images
+var coinImage, gemImage;
+
+function preload() {
+    coinImage = loadImage('./coin.png');
+    gemImage = loadImage('./emerald.png');
+}
+
 function setup() {
     createCanvas(480, 480);
     frameRate(30);
@@ -22,6 +30,7 @@ function setup() {
     Manager.setupBackgroundObjects();
     Manager.setupBars();
     Manager.setupPlayer();
+    Manager.setupPickups();
 }
 
 function draw() {
@@ -36,6 +45,7 @@ function draw() {
     Manager.manageBackgrounds();
     Manager.manageBars();
     Manager.managePlayer();
+    Manager.managePickups();
 }
 
 var Manager = {
@@ -81,6 +91,13 @@ var Manager = {
         player = new Player(w / 6, h - h / 6);
     },
 
+    setupPickups: function () {
+        for (let i=0; i<2; i++) {
+            Coins.push(new Coin(i*480*rw + random(480)*rw, random(h)));
+            Gems.push(new Gem(i*480*rw + random(480)*rw, random(h)));
+        }
+    },
+
     manageBars: function () {
         for (var i = 0; i < Bars.length; i++) {
             if (Bars[i].xpos < -2 * barWidth) {
@@ -106,6 +123,15 @@ var Manager = {
     managePlayer: function () {
         player.update();
         player.display();
+    },
+
+    managePickups: function () {
+        for (let i=0; i<Coins.length; i++) {
+            Coins[i].update(speedX, ascentSpeed);
+            Gems[i].update(speedX, ascentSpeed);
+            Coins[i].display();
+            Gems[i].display();
+        }
     },
 
     realign: function () {
@@ -431,5 +457,111 @@ function BkObj(t, x, y) {
             else
                 rect(x + this.segmentWidth + i * this.segmentWidth, y, this.segmentWidth, -(13 * this.increment - (i - 13) * this.increment));
         }
+    }
+}
+
+class Pickup {
+    constructor(_x, _y) {
+        this.counterOn = false;
+        this.xpos = _x;
+        this.ypos = _y;
+        this.pickupw = w/22;
+        this.pickuph = w/20;
+        this.xend = this.xpos + this.pickupw;
+        this.yend = this.ypos + this.pickuph;
+        this.speed = 0;
+        this.ascent = 0;
+        this.img = null;
+        this.cyellow = 224;
+        this.cblue = 0;        
+
+        // special effect
+        this.counter = 0;
+        this.cellSize = 8;
+        this.columns = int(this.pickupw / this.cellSize);
+        this.rows = int(this.pickuph / this.cellSize);
+        this.pxdir = [];
+        this.pydir = [];
+        this.pSizes = [];
+        this.pScaling = [];
+        for (let i=0; i<this.columns; i++) {
+            this.pxdir.push([]);
+            this.pydir.push([]);
+            this.pSizes.push([]);
+            this.pScaling.push([]);
+            for (let j=0; j<this.rows; j++) {
+                this.pxdir[i].push(random(-10, 10));
+                this.pydir[i].push(random(-10, 10));
+                this.pSizes[i].push(this.cellSize);
+                this.pScaling[i].push(random(1));
+            }
+        }        
+    }
+
+    update (_s, _asc) {
+        this.speed = _s;
+        this.ascent = _asc;
+        this.xpos = this.xpos - this.speed;
+        this.xend = this.xpos + this.pickupw;
+        this.ypos = this.ypos + this.ascent;
+        this.yend = this.ypos + this.pickuph;
+        if (this.xpos < -50*rw) {
+            this.xpos = w + random(480)*rw;
+            this.ypos = random(h) + this.ascent;
+        } 
+    }
+    
+    display () {
+        stroke(200);
+        fill(200);
+        rectMode(CORNER);
+        image(this.img, this.xpos, this.ypos, this.pickupw, this.pickuph);
+    }    
+}
+
+class Coin extends Pickup {
+    constructor(_x, _y) {
+        super(_x, _y);
+        this.expand = true;     // denotes whether the image should expand
+    }
+
+    update (_s, _asc) {
+        super.update(_s, _asc);
+        /**
+         *  Conditionals control the change in width of the coin image
+         *  to make it appear it's rotating.
+         */
+        if (this.pickupw > 35*rw && this.expand) {
+            this.expand = false;
+            this.pickupw = this.pickupw - 2;
+        } else if (this.pickupw < 5*rw && !this.expand) {
+            this.expand = true;
+            this.pickupw = this.pickupw + 2;
+        } else if (this.expand) {
+            this.pickupw = this.pickupw + 2;
+        } else {
+            this.pickupw = this.pickupw - 2;
+        }
+    }
+
+    display () {
+        stroke(200);
+        noFill();
+        noStroke();
+        rectMode(CORNER);
+        imageMode(CENTER);   
+        image(coinImage, this.xpos+this.pickupw/2, this.ypos+this.pickuph/2, this.pickupw, this.pickuph);
+        rect(this.xpos, this.ypos, this.pickupw, this.pickuph);        
+    }
+}
+
+class Gem extends Pickup {
+    constructor(_x, _y) {
+        super(_x, _y);
+    }
+
+    display() {
+        imageMode(CORNER);
+        image(gemImage, this.xpos, this.ypos, this.pickupw, this.pickuph);
     }
 }
